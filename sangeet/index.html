@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://kit.fontawesome.com/d9605b0157.js" crossorigin="anonymous"></script>
+    <!-- Font js -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!-- APlayer CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"/>
+
+    <title>Sangeet</title>
+    <style>
+    	body{
+    		background-color: #FDC7D7;
+    		font-family: Open sans;
+    	}
+    	img{
+    		width: 100%;
+    		min-height: 250px;
+    	}
+    	
+    	.main{
+    		padding: 40px 0;
+    	}
+    	.SearchBox{
+    		position: absolute;
+    		transform: translate(-40%, -40%);
+    		margin-left: 50%;
+    		margin-bottom: 100px;
+			background: #BDBDFD;
+			height: 60px;
+			border-radius: 40px;
+			padding: 20px;
+			padding-bottom: 10px;
+
+    	}
+    	.SearchBox: hover > .searchtext{
+    		width: 240px;
+    		padding: 0 6px;
+    	}
+ 	
+    	.preload.display-none{
+    		position: fixed;
+    		opacity: 0;
+    		top: 0;
+    		left: 0;
+    		width: 100%;
+    		height: 100vh;
+    		background: black;
+    		z-index: -10;
+    		color: white;
+    		text-align: center;
+    		line-height: 90vh;
+    		transition: all 0.5s;
+    	}
+    	@keyframes fadeIn{
+    		to{
+    			opacity: 1;
+    		}
+    	}
+    	.fade-in{
+    		opacity: 0;
+    		animation: fadeIn 1s ease-in forwards;
+    	}
+    	.searchbutton{
+    		padding-bottom: 10px;
+    		color: #e84118;
+    		float: right;
+    		width: 40px;
+    		height: 30px;
+    		border-radius: 50%;
+    		background: #BDBDFD;
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+    	}
+    	.searchtext{
+    		padding-bottom: 10px;
+    		border: none;
+    		background: none;
+    		outline: none;
+    		float: left;
+    		padding: 0;
+    		color: white;
+    		font-size: 16px;
+    		transition: 0.4s;
+    		line-height: 10px;
+    		width: 240px;
+    		font-family: sans-serif;
+    	}
+    	.col-md-3{
+    		margin-bottom: 40px;
+    	}
+    	.album-poster{
+    		position: relative;
+    		display: block;
+    		border-radius: 7px;
+    		overflow: hidden;
+    		box-shadow: 0 15px 35px #3d2173a1;
+    		transition: all ease 0.4s;
+    	}
+    	.album-poster:hover{
+    		box-shadow: none;
+    		transform: scale(0.98) translateY(5px);
+    	}
+    	h1{
+    		margin-top: 20px;
+    		margin-left: 100px;
+    		font-family: 'Dancing Script', cursive;	
+    		font-size: 100px;
+    		margin-bottom: 20px;
+    		border-bottom: 4px solid #e6e6e6;
+    		padding-bottom: 15px;
+    	}
+    	h3{
+    		font-size: 34px;
+    		margin-bottom: 34px;
+    		border-bottom: 4px solid #e6e6e6;
+    		padding-bottom: 15px;
+    	}
+    	p{
+    		font-size: 15px;
+    	}
+    	h4{
+    		font-size: 16px;
+    		text-transform: uppercase;
+    		margin-top: 15px;
+    		font-weight: 700;
+    	}
+		
+		#aplayer{
+			position: fixed;
+			bottom: -100%;
+			left: 0;
+			width: 100%;
+			margin: 0;
+			box-shadow: 0 -2px 2px #dadada;
+			background-color: #fff;
+			transition: all ease 0.5s;
+		}
+		#aplayer.showPlayer{
+			bottom: 0;
+		}
+		/*Intro transition page*/
+		.preload{
+			width: 100%;
+			height: 100%;
+			background: #BDBDFD;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+		.logo{
+			width: 300px;
+			height: 300px;
+			margin: 150px auto 50pc auto;
+			font-size: 100px;
+			font-family: 'Dancing Script', cursive;	
+			text-shadow: -1px 2px 2px #000;
+			text-align: center;
+			color: azure;
+		}
+		
+
+		
+		/*MUSIC PLAYER CUSTOMIZING STYLE*/
+		span{
+			color: #000 !important;
+			font-size: 16px;
+		}
+		.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-loaded{
+			background: #e0e0e0;
+    		height: 4px;
+		}
+		.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played{
+			height: 4px;
+			background-color: #2196F3 !important;
+		}
+		.aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played .aplayer-thumb{
+			background-color: #2196F3 !important;
+		}
+
+		.aplayer .aplayer-icon{
+			width: 20px;
+			height: 20px;
+		}
+		.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path {
+		    fill: #000;
+		}
+		.aplayer .aplayer-info .aplayer-music{
+			margin-bottom: 5px;
+		}
+		
+
+    </style>
+ 	</head>
+	<body>
+<h1>Sangeet</h1>
+<!-- search box   -->  
+<div class="SearchBox">
+	<input class="searchtext" type="text" name="" placeholder="Search for a song">
+	<a class="searchbutton" href="#">
+		<i class="fas fa-search"></i>
+	</a>
+</div>
+
+
+<!-- Introduction page -->
+<div class="preload">
+	<div class="logo">
+		Welcome To Sangeet
+	</div>
+</div>
+ <script>
+ 	const preload = document.querySelector('.preload');
+ 	document.addEventListener('DOMContentLoaded', (e)=>{
+ 		setTimeout(()=>{
+ 			preload.classList.add('display-none');
+ 		}, 2000);
+ 	})
+ </script>
+<div class="main">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h3>New Releases</h3>
+			</div>
+			<div class="col-md-3">
+				<a href="javascript:void();" class="album-poster" data-switch="0">
+					<img src="https://tse3.mm.bing.net/th?id=OIP.0T2cOMRV_jiXaoddaBpUmAHaHd&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>Call It What You Want</h4>
+				<p>Reputation - 2017</p>
+			</div>
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="1">
+					<img src="https://tse4.mm.bing.net/th?id=OIP.GaStfuAEUr5Gg14eCfqGMAHaHa&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>London Boy</h4>
+				<p>Lover - 2019</p>
+			</div>
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="2">
+					<img src="https://tse1.mm.bing.net/th?id=OIP.aglpCeNvq4CzEPcuGLtB-gAAAA&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>Exile</h4>
+				<p>Folklore - 2020</p>
+			</div>
+
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="3">
+					<img src="https://www.udiscovermusic.com/wp-content/uploads/2018/09/Taylor-Swift-debut-album-cover-web-optimised-820-820x600.jpg" alt="">
+				</a>
+				<h4>Tim McGraw</h4>
+				<p>Taylor Swift - 2006</p>
+			</div>
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="4">
+					<img src="https://upload.wikimedia.org/wikipedia/en/8/8f/Taylor_Swift_-_Speak_Now_cover.png" alt="">
+				</a>
+				<h4>Innocent</h4>
+				<p>Speak Now - 2010</p>
+			</div>
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="5">
+					<img src="https://tse3.mm.bing.net/th?id=OIP.Jx29JUwdow8i7hZMK48QegHaHa&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>Fearless</h4>
+				<p>Fearless - 2008</p>
+			</div>
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="6">
+					<img src="https://tse1.mm.bing.net/th?id=OIP.Yh400iftY8c0T9AdWFqqjwHaE2&pid=Api&P=0&w=242&h=159" alt="">
+				</a>
+				<h4>22</h4>
+				<p>Red - 2012</p>
+			</div>
+			<div class="col-md-3">
+				<a href="#" class="album-poster" data-switch="7">
+					<img src="https://tse2.mm.bing.net/th?id=OIP.lIhCYFBFmAYuPnHO9exBzAHaHa&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>Blank Space</h4>
+				<p>1989 - 2014</p>
+			</div>
+			
+		</div>
+
+
+		<div class="row">
+			<div class="col-md-12">
+				<h3>coming soon</h3>
+			</div>
+			<div class="col-md-2">
+				<a href="#" class="album-poster" data-switch="8">
+					<img src="https://www.udiscovermusic.com/wp-content/uploads/2019/09/Maroon-5-Memories-Cover-820.jpg-820x600.jpg " alt="">
+				</a>
+				<h4>Memories</h4>
+			</div>
+			<div class="col-md-2">
+				<a href="#" class="album-poster" data-switch="9">
+					<img src="https://tse4.mm.bing.net/th?id=OIP.II_K1XbbklZde2J66NlLYAHaHa&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>Lifafa</h4>
+			</div>
+			<div class="col-md-2">
+				<a href="#" class="album-poster" data-switch="10">
+					<img src="https://prnewswire2-a.akamaihd.net/p/1893751/sp/189375100/thumbnail/entry_id/0_jitgtt7i/def_height/400/def_width/400/version/100012/type/1" alt="">
+				</a>
+				<h4>Electric Love</h4>
+			</div>
+			
+			<div class="col-md-2">
+				<a href="#" class="album-poster" data-switch="11">
+					<img src="https://tse1.mm.bing.net/th?id=OIP.J7Inp9FLgQU_ZvVw_WAO9gHaHa&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>Liggi</h4>
+			</div>
+			<div class="col-md-2">
+				<a href="#" class="album-poster" data-switch="12">
+					<img src="https://tse1.mm.bing.net/th?id=OIP.6Bbor1JO3OHX049yL8Sw8AHaHa&pid=Api&P=0&w=300&h=300" alt="">
+				</a>
+				<h4>1000 Emerald Pools</h4>
+			</div>
+			<div class="col-md-2">
+				<a href="#" class="album-poster" data-switch="13">
+					<img src="https://i.ytimg.com/vi/DeiSSHwIKDY/maxresdefault.jpg" alt="">
+				</a>
+				<h4>One Dance</h4>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+
+	<div id="aplayer"></div>
+
+	<!-- Jquery Link -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+	<!-- Bootstrap Link -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<!-- APlayer Jquery link -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>	
+
+	<script>
+		
+		// to get the song to play by clicking on album-poster
+		$(".album-poster").on('click', function(e){
+			var dataSwitchId = $(this).attr('data-switch');
+			
+			// switch function 
+			ap.list.switch(dataSwitchId); 
+
+			//to play song as you click
+			ap.play();
+
+			// click to see slideUp player 
+			$("#aplayer").addClass('showPlayer');
+		});
+
+		const ap = new APlayer({
+		    container: document.getElementById('aplayer'),
+		    listFolded: true,
+		    audio: [
+		    {
+		        name: 'Call It What You Want',//Song name
+		        artist: 'Taylor Swift',//Artist name
+		        url: 'source/ciwyw.mp3',//Path or URL
+		        cover: 'https://tse3.mm.bing.net/th?id=OIP.0T2cOMRV_jiXaoddaBpUmAHaHd&pid=Api&P=0&w=300&h=300'
+		    },
+			{
+		        name: 'London Boy',  
+		        artist: 'Taylor Swift', 
+		        url: 'source/londonboy.mp3', 
+		        cover: 'https://tse4.mm.bing.net/th?id=OIP.GaStfuAEUr5Gg14eCfqGMAHaHa&pid=Api&P=0&w=300&h=300' // COVER IMAGE
+		    },
+			{
+				name: 'Exile',
+				artist: 'Taylor Swift',
+				url: 'source/exile.mp3',
+				cover: 'https://tse1.mm.bing.net/th?id=OIP.aglpCeNvq4CzEPcuGLtB-gAAAA&pid=Api&P=0&w=300&h=300',
+			},
+			{
+				name: 'Tim McGraw',
+				artist: 'Taylor Swift',
+				url: 'source/TimMcGraw.mp3',
+				cover: 'https://www.udiscovermusic.com/wp-content/uploads/2018/09/Taylor-Swift-debut-album-cover-web-optimised-820-820x600.jpg',
+			},
+
+			{
+				name: 'Innocent',
+				artist: 'Taylor Swift',
+				url: 'source/innocent.mp3',
+				cover: 'https://upload.wikimedia.org/wikipedia/en/8/8f/Taylor_Swift_-_Speak_Now_cover.png',
+			},
+			{
+				name: 'Fearless',
+				artist: 'Taylor Swift',
+				url: 'source/fearless.mp3',
+				cover: 'https://tse3.mm.bing.net/th?id=OIP.Jx29JUwdow8i7hZMK48QegHaHa&pid=Api&P=0&w=300&h=300',
+			},
+			{
+				name: '22',
+				artist: 'Taylor Swift',
+				url: 'source/22.mp3',
+				cover: 'https://tse1.mm.bing.net/th?id=OIP.Yh400iftY8c0T9AdWFqqjwHaE2&pid=Api&P=0&w=242&h=159',
+			},
+			{
+				name: 'Blank Space',
+				artist: 'Taylor Swift',
+				url: 'source/blankspace.mp3',
+				cover: 'https://tse2.mm.bing.net/th?id=OIP.lIhCYFBFmAYuPnHO9exBzAHaHa&pid=Api&P=0&w=300&h=300',
+			},
+			{
+				name: 'Memories',
+				artist: 'Maroon5',
+				url: 'source/1.mp3',
+				cover: 'https://www.udiscovermusic.com/wp-content/uploads/2019/09/Maroon-5-Memories-Cover-820.jpg-820x600.jpg',
+			},
+			{
+				name: 'Jaago',
+				artist: 'Lifafa',
+				url: 'source/jaago.mp3',
+				cover: 'https://tse4.mm.bing.net/th?id=OIP.II_K1XbbklZde2J66NlLYAHaHa&pid=Api&P=0&w=300&h=300',
+			},
+			{
+				name: 'Electric Love',
+				artist: 'Borns',
+				url: 'source/electriclove.mp3',
+				cover: 'https://prnewswire2-a.akamaihd.net/p/1893751/sp/189375100/thumbnail/entry_id/0_jitgtt7i/def_height/400/def_width/400/version/100012/type/1',
+			},
+			{
+				name: 'Liggi',
+				artist: 'Ritviz',
+				url: 'source/liggi.mp3',
+				cover: 'https://tse1.mm.bing.net/th?id=OIP.J7Inp9FLgQU_ZvVw_WAO9gHaHa&pid=Api&P=0&w=300&h=300',
+			},
+			{
+				name: '10000 Emerald Pools',
+				artist: 'Borns',
+				url: 'source/10000emerald.mp3',
+				cover: 'https://tse1.mm.bing.net/th?id=OIP.6Bbor1JO3OHX049yL8Sw8AHaHa&pid=Api&P=0&w=300&h=300',
+			},
+			{
+				name: 'One Dance',
+				artist: 'Drake',
+				url: 'source/onedance.mp3',
+				cover: 'https://data.whicdn.com/images/303287717/original.jpg?t=1513315648 ',
+			}
+		    ]
+		});
+	</script>
+	</body>
+</html>
